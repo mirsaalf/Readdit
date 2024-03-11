@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Readdit.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Readdit.Areas.Identity.Data
 {
@@ -12,8 +13,6 @@ namespace Readdit.Areas.Identity.Data
             : base(options)
         {
         }
-
-        public DbSet<Books> Book { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
