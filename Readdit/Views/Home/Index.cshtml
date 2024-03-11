@@ -1,8 +1,56 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@using Readdit.Areas.Identity.Data
+@using Readdit.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<html>
+<head>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Handlee">
+</head>
+<body>
+    <div class="welcome-image">
+        <img width="400" src="/images/book.webp" />
+    </div>
+
+    <div class="welcome">
+        <h1> readdit</h1>
+        <h2> track and manage your reading progress</h2>
+    </div>
+
+@*     add functionality to buttons *@
+    <div id="sign-in-up">
+        <form action="/Identity/Account/Login">
+            <button type="submit" class="btn btn-outline-dark">Sign In</button>
+        </form>
+    </div>
+    <div>
+        <form action="/Identity/Account/Register">
+            <button type="submit" class="btn btn-outline-dark">Sign Up</button>
+        </form>
+    </div>
+
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <img width="150" src="/images/friends-removebg-preview.png" />
+                <p>add friends to read with</p>
+            </div>
+            <div class="col">
+                <img width="150" src="/images/heart-removebg-preview.png" />
+                <p>track your reading progess</p>
+            </div>
+            <div class="col">
+                <img width="130" src="/images/shelff-removebg-preview.png" />
+                <p>track and organize all of your books</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
