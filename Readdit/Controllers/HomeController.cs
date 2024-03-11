@@ -1,3 +1,5 @@
+using Readdit.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Readdit.Models;
 using System.Diagnostics;
