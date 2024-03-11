@@ -1,6 +1,8 @@
-﻿namespace Readdit.Areas.Identity.Data
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Readdit.Areas.Identity.Data
 {
-    public class ApplicationUser
+    public class ApplicationUser : IdentityUser
     {
     }
 }
