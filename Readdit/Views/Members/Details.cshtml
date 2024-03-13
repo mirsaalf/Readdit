@@ -1,13 +1,53 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Details";
+}
 
+<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Handlee">
 </head>
 <body>
-    <div>
-        @RenderBody()
+    <h1>@ViewData["Title"]</h1>
+
+    <h2>To Be Read</h2>
+    <div class="book-list">
+        <!-- Placeholder for To Be Read list -->
+        <!-- Replace this with actual book data from the database -->
+        <div class="book">
+            <p>Book Title 1</p>
+            <!-- Placeholder for book image -->
+            <!-- Replace this with actual book image -->
+            <img src="book-image-1.jpg" alt="Book Image 1">
+            <!-- Placeholder for action buttons -->
+            <!-- Replace these with actual action buttons -->
+            <button>Move to Currently Reading</button>
+            <button>Add Review</button>
+            <button>Delete Book</button>
+        </div>
+        <div class="book">
+            <p>Book Title 2</p>
+            <img src="book-image-2.jpg" alt="Book Image 2">
+            <button>Move to Currently Reading</button>
+            <button>Add Review</button>
+            <button>Delete Book</button>
+        </div>
+        <!-- Add more books as needed -->
+    </div>
+
+    <h2>Currently Reading</h2>
+    <div class="book-list">
+        <!-- Placeholder for Currently Reading list -->
+        <!-- Replace this with actual book data from the database -->
+        <!-- Similar structure as above -->
+    </div>
+
+    <h2>Completed Reading</h2>
+    <div class="book-list">
+        <!-- Placeholder for Completed Reading list -->
+        <!-- Replace this with actual book data from the database -->
+        <!-- Similar structure as above -->
     </div>
 </body>
 </html>
