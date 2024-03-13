@@ -1,13 +1,60 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity;
+@using Readdit.Areas.Identity.Data;
 
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Handlee">
 </head>
 <body>
-    <div>
-        @RenderBody()
+    <h1>Welcome back!</h1>
+
+    <h3>My Lists</h3>
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <p>To Be Read</p>
+                <a href="/Members/Details">Go to To Be Read list</a>
+                <!-- Add previews of books from the To Be Read list -->
+                <!-- Example: <p>Book 1</p><p>Book 2</p><p>Book 3</p> -->
+            </div>
+            <div class="col">
+                <p>Currently Reading</p>
+                <a href="/Members/Details">Go to Currently Reading list</a>
+                <!-- Add previews of books from the Currently Reading list -->
+                <!-- Example: <p>Book 4</p><p>Book 5</p><p>Book 6</p> -->
+            </div>
+            <div class="col">
+                <p>Completed Reading</p>
+                <a href="/Members/Details">Go to Completed Reading list</a>
+                <!-- Add previews of books from the Completed Reading list -->
+                <!-- Example: <p>Book 7</p><p>Book 8</p><p>Book 9</p> -->
+            </div>
+        </div>
     </div>
+
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <p>Set a goal to read more this year!</p>
+                <p>I want to read <input type="number" id="goal" min="1" value="1"> books in 2024</p>
+                <!-- Add functionality to the Start Goal button -->
+                <button type="button" class="btn-light" onclick="startGoal()">Start Goal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startGoal() {
+            var goal = document.getElementById("goal").value;
+            // Add functionality to track goal progress based on completed books
+            // For example, you can send an AJAX request to the server to update the goal progress
+            alert("Goal set to " + goal + " books.");
+        }
+    </script>
 </body>
 </html>
