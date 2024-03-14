@@ -1,5 +1,8 @@
-﻿@using Microsoft.AspNetCore.Identity;
+﻿@model IEnumerable<Readdit.Models.Book>
+
+@using Microsoft.AspNetCore.Identity;
 @using Readdit.Areas.Identity.Data;
+@using Readdit.Models;
 
 @{
     ViewData["Title"] = "Home";
@@ -8,10 +11,65 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        #bookTable.collapsed table {
+            display: none;
+        }
+    </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Handlee">
+    <script>
+        function searchBooks() {
+            // Declare variables
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("bookSearchInput");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("bookTable");
+            tr = table.getElementsByTagName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName("td")[0]; // Assuming the book name is in the first column
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Welcome back!</h1>
+
+
+    <input type="text" id="bookSearchInput" onkeyup="searchBooks()" placeholder="Search for books..."> 
+    <button id="toggleTableBtn">Toggle Table</button>
+
+    <div id="bookTable">
+    <table>
+        <thead>
+            <tr>
+                <th>Book Name</th>
+                <th>Author</th>
+                <th>Genre</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through books from the database and populate the table -->
+                @foreach (var book in Model)
+                {
+                    <tr>
+                        <td>@book.book_name</td>
+                        <td>@book.author_name</td>
+                        <td>@book.book_genre</td>
+                    </tr>
+                }
+        </tbody>
+    </table>
+    </
 
     <h3>My Lists</h3>
     <div class="container text-center">
@@ -19,20 +77,14 @@
             <div class="col">
                 <p>To Be Read</p>
                 <a href="/Members/Details">Go to To Be Read list</a>
-                <!-- Add previews of books from the To Be Read list -->
-                <!-- Example: <p>Book 1</p><p>Book 2</p><p>Book 3</p> -->
             </div>
             <div class="col">
                 <p>Currently Reading</p>
                 <a href="/Members/Details">Go to Currently Reading list</a>
-                <!-- Add previews of books from the Currently Reading list -->
-                <!-- Example: <p>Book 4</p><p>Book 5</p><p>Book 6</p> -->
             </div>
             <div class="col">
                 <p>Completed Reading</p>
                 <a href="/Members/Details">Go to Completed Reading list</a>
-                <!-- Add previews of books from the Completed Reading list -->
-                <!-- Example: <p>Book 7</p><p>Book 8</p><p>Book 9</p> -->
             </div>
         </div>
     </div>
@@ -55,6 +107,17 @@
             // For example, you can send an AJAX request to the server to update the goal progress
             alert("Goal set to " + goal + " books.");
         }
+
+            // Get references to the button and table container
+            var toggleBtn = document.getElementById('toggleTableBtn');
+            var bookTable = document.getElementById('bookTable');
+
+            // Add click event listener to the button
+            toggleBtn.addEventListener('click', function () {
+            // Toggle the 'collapsed' class on the table container
+            bookTable.classList.toggle('collapsed');
+        });
+
     </script>
 </body>
 </html>
