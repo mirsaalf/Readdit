@@ -1,13 +1,22 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Admin Home";
+}
 
+<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <title>@ViewData["Title"]</title>
 </head>
 <body>
-    <div>
-        @RenderBody()
-    </div>
+    <h1>Welcome, Admin!</h1>
+
+    <h2>What would you like to do today?</h2>
+
+    <ul>
+        <li><a href="/Admin/Create">Create</a></li>
+        <li><a href="/Admin/Delete">Delete</a></li>
+        <li><a href="/Admin/Details">Details</a></li>
+        <li><a href="/Admin/Update">Update</a></li>
+    </ul>
 </body>
 </html>
