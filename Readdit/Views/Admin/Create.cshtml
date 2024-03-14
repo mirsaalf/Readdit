@@ -1,13 +1,52 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Create";
+}
 
+<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <title>@ViewData["Title"]</title>
 </head>
 <body>
-    <div>
-        @RenderBody()
-    </div>
+    <h1>Create</h1>
+
+    <form id="createBookForm">
+        <div>
+            <label for="bookName">Book Name:</label>
+            <input type="text" id="bookName" name="bookName">
+        </div>
+        <div>
+            <label for="authorName">Author Name:</label>
+            <input type="text" id="authorName" name="authorName">
+        </div>
+        <div>
+            <label for="pages">Number of Pages:</label>
+            <input type="number" id="pages" name="pages">
+        </div>
+        <div>
+            <label for="genre">Genre:</label>
+            <input type="text" id="genre" name="genre">
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById("createBookForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get form data
+            var bookName = document.getElementById("bookName").value;
+            var authorName = document.getElementById("authorName").value;
+            var pages = document.getElementById("pages").value;
+            var genre = document.getElementById("genre").value;
+
+            // Perform AJAX request to add the book to the database
+            // Replace this with actual AJAX call to add the book
+            // After successful addition, display a popup message
+            // For example:
+            alert("Book '" + bookName + "' added to the directory.");
+        });
+    </script>
 </body>
 </html>
+

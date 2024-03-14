@@ -1,13 +1,92 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Update";
+}
 
+<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <title>@ViewData["Title"]</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .editable {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        @RenderBody()
-    </div>
+    <h1>Update</h1>
+
+    <h2>Users</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email Address</th>
+                <th>Date Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Placeholder for user details -->
+            <!-- Replace this with actual user details from the database -->
+            <tr>
+                <td class="editable">John</td>
+                <td class="editable">Doe</td>
+                <td class="editable">john@example.com</td>
+                <td>2024-03-15</td>
+            </tr>
+            <!-- Add more users as needed -->
+        </tbody>
+    </table>
+
+    <h2>Books</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Book Name</th>
+                <th>Author</th>
+                <th>Pages</th>
+                <th>Genre</th>
+                <th>Date Added</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Placeholder for book details -->
+            <!-- Replace this with actual book details from the database -->
+            <tr>
+                <td class="editable">Book 1</td>
+                <td class="editable">Author 1</td>
+                <td class="editable">200</td>
+                <td class="editable">Fiction</td>
+                <td>2024-03-15</td>
+            </tr>
+            <!-- Add more books as needed -->
+        </tbody>
+    </table>
+
+    <script>
+        // Add click event listener to editable cells
+        document.querySelectorAll('.editable').forEach(function (cell) {
+            cell.addEventListener('click', function () {
+                // Replace the cell's content with an input field for editing
+                var value = this.textContent.trim();
+                this.innerHTML = '<input type="text" value="' + value + '">';
+            });
+        });
+    </script>
 </body>
 </html>
