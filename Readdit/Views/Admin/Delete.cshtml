@@ -1,13 +1,58 @@
-﻿<!DOCTYPE html>
+﻿@{
+    ViewData["Title"] = "Delete";
+}
 
+<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
+    <title>@ViewData["Title"]</title>
 </head>
 <body>
+    <h1>Delete</h1>
+
+    <h2>Books</h2>
     <div>
-        @RenderBody()
+        <label for="bookSearch">Search for a book:</label>
+        <input type="text" id="bookSearch" name="bookSearch">
+
+        <!-- Placeholder for search results -->
+        <!-- Replace this with actual search results from the database -->
+        <ul id="bookList">
+            <li>Book 1 <button onclick="confirmDeleteBook('Book 1')">Delete</button></li>
+            <li>Book 2 <button onclick="confirmDeleteBook('Book 2')">Delete</button></li>
+            <!-- Add more books as needed -->
+        </ul>
     </div>
+
+    <h2>Users</h2>
+    <div>
+        <ol>
+            <!-- Placeholder for user list -->
+            <!-- Replace this with actual user list from the database -->
+            <li>User 1 <button onclick="confirmDeleteUser('User 1')">Delete</button></li>
+            <li>User 2 <button onclick="confirmDeleteUser('User 2')">Delete</button></li>
+            <!-- Add more users as needed -->
+        </ol>
+    </div>
+
+    <script>
+        function confirmDeleteBook(bookName) {
+            if (confirm("Are you sure you want to delete the book '" + bookName + "'?")) {
+                // Perform AJAX request to delete the book from the database
+                // Replace this with your actual AJAX call to delete the book
+                // After successful deletion, display a popup message
+                alert("Book '" + bookName + "' deleted successfully.");
+            }
+        }
+
+        function confirmDeleteUser(userName) {
+            if (confirm("Are you sure you want to delete the user '" + userName + "'?")) {
+                // Perform AJAX request to delete the user from the database
+                // Replace this with your actual AJAX call to delete the user
+                // After successful deletion, display a popup message
+                alert("User '" + userName + "' deleted successfully.");
+            }
+        }
+    </script>
 </body>
 </html>
