@@ -65,6 +65,9 @@
                         <td>@book.book_name</td>
                         <td>@book.author_name</td>
                         <td>@book.book_genre</td>
+                        <td>
+                        <button class="add-to-list-btn" onclick="addToToBeReadList('@book.book_id')">Add to To Be Read</button>
+                        </td>
                     </tr>
                 }
         </tbody>
@@ -76,15 +79,15 @@
         <div class="row align-items-start">
             <div class="col">
                 <p>To Be Read</p>
-                <a href="/Members/Details">Go to To Be Read list</a>
+                <a href="/Members/ToBeRead">Go to To Be Read list</a>
             </div>
             <div class="col">
                 <p>Currently Reading</p>
-                <a href="/Members/Details">Go to Currently Reading list</a>
+                <a href="/Members/CurrentlyReading">Go to Currently Reading list</a>
             </div>
             <div class="col">
                 <p>Completed Reading</p>
-                <a href="/Members/Details">Go to Completed Reading list</a>
+                <a href="/Members/Read">Go to Completed Reading list</a>
             </div>
         </div>
     </div>
@@ -116,7 +119,33 @@
             toggleBtn.addEventListener('click', function () {
             // Toggle the 'collapsed' class on the table container
             bookTable.classList.toggle('collapsed');
-        });
+            });
+
+            function addToToBeReadList(book_id) {
+                // Send AJAX request to add the book to the To Be Read list
+                fetch('/Members/AddToToBeReadList', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ book_id: book_id })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/Members/ToBeRead';
+                            // Book added successfully
+                            alert('Book added to To Be Read list!');
+                        } else {
+                            // Handle error response
+                            alert('Failed to add book to To Be Read list.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while adding the book to To Be Read list.');
+                    });
+            }
+
 
     </script>
 </body>

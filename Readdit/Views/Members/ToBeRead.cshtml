@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Readdit.Models.Book>
+
+@{
+    ViewData["Title"] = "To Be Read List";
+}
+
+<h1>To Be Read List</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.book_name</td>
+                <td>@book.author_name</td>
+                <td>@book.book_genre</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-secondary" onclick="moveToCurrentlyReading(@book.book_id)">Move to Currently Reading</button>
+                        <button type="button" class="btn btn-secondary" onclick="moveToCompletedReading(@book.book_id)">Move to Completed Reading</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteBook(@book.book_id)">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        function moveToCurrentlyReading(bookId) {
+            // Send AJAX request to move the book to Currently Reading list
+            // Implement your AJAX logic here
+            alert("Moved book to Currently Reading list.");
+        }
+
+        function moveToCompletedReading(bookId) {
+            // Send AJAX request to move the book to Completed Reading list
+            // Implement your AJAX logic here
+            alert("Moved book to Completed Reading list.");
+        }
+
+        function deleteBook(bookId) {
+            // Send AJAX request to delete the book from the list
+            // Implement your AJAX logic here
+            alert("Deleted book from the list.");
+        }
+    </script>
+}
