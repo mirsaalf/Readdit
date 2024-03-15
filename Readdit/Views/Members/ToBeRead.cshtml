@@ -1,57 +1,80 @@
-﻿@model IEnumerable<Readdit.Models.Book>
+﻿@model Readdit.Models.MembersViewModel
 
 @{
-    ViewData["Title"] = "To Be Read List";
+    ViewData["Title"] = "To Be Read";
 }
 
-<h1>To Be Read List</h1>
+<h1>To Be Read</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Book Name</th>
-            <th>Author</th>
-            <th>Genre</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var book in Model)
-        {
+@if (Model.ToBeReadBooks.Any())
+{
+    <form id="removeBookForm" method="post" asp-action="RemoveFromList" asp-controller="Members" class="mb-3">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@book.book_name</td>
-                <td>@book.author_name</td>
-                <td>@book.book_genre</td>
-                <td>
-                    <div class="btn-group" role="group" aria-label="Actions">
-                        <button type="button" class="btn btn-secondary" onclick="moveToCurrentlyReading(@book.book_id)">Move to Currently Reading</button>
-                        <button type="button" class="btn btn-secondary" onclick="moveToCompletedReading(@book.book_id)">Move to Completed Reading</button>
-                        <button type="button" class="btn btn-danger" onclick="deleteBook(@book.book_id)">Delete</button>
-                    </div>
-                </td>
+                <th>Book Name</th>
+                <th>Author</th>
+                <th>Genre</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var book in Model.ToBeReadBooks)
+            {
+                <tr>
+                    <td>@book.book_name</td>
+                    <td>@book.author_name</td>
+                    <td>@book.book_genre</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="moveToCurrentlyReading(@book.book_id)">Move to Currently Reading</button>
+                        <button class="btn btn-danger" onclick="removeFromList(@book.book_id)">Remove from List</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </form>
+}
+else
+{
+    <p>No books found in the To Be Read list.</p>
+}
 
 @section Scripts {
     <script>
         function moveToCurrentlyReading(bookId) {
-            // Send AJAX request to move the book to Currently Reading list
-            // Implement your AJAX logic here
-            alert("Moved book to Currently Reading list.");
+            // Send an AJAX request to the server to update the status of the book to CurrentlyReading
+            $.ajax({
+                url: '/Members/MoveToCurrentlyReading',
+                type: 'POST',
+                data: { id: bookId },
+                success: function (response) {
+                    // Handle success, maybe show a message or update UI
+                    console.log('Book moved to Currently Reading');
+                },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error('Error moving book to Currently Reading:', error);
+                }
+            });
         }
 
-        function moveToCompletedReading(bookId) {
-            // Send AJAX request to move the book to Completed Reading list
-            // Implement your AJAX logic here
-            alert("Moved book to Completed Reading list.");
-        }
-
-        function deleteBook(bookId) {
-            // Send AJAX request to delete the book from the list
-            // Implement your AJAX logic here
-            alert("Deleted book from the list.");
+        function removeFromList(bookId) {
+            // Send an AJAX request to the server to remove the book from the list
+            $.ajax({
+                url: '/Members/RemoveFromList',
+                type: 'POST',
+                data: { id: bookId },
+                success: function (response) {
+                    // Handle success, maybe show a message or update UI
+                    console.log('Book removed from the list');
+                },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error('Error removing book from the list:', error);
+                }
+            });
         }
     </script>
+
 }

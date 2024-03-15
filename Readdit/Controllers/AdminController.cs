@@ -37,7 +37,7 @@ namespace Readdit.Controllers
         // POST: Admin/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("book_id,book_name,author_name,book_genre")] Book book)
+        public async Task<IActionResult> Create([Bind("book_id,book_name,book_genre")] Book book)
         {
             if (ModelState.IsValid)
             {
@@ -50,10 +50,11 @@ namespace Readdit.Controllers
             return View(book);
         }
 
-        // GET: Admin/Delete/5
+        // GET: Admin/Delete
+        [HttpGet, ActionName("Delete")]
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null || _context.Books == null)
             {
                 return NotFound();
             }
@@ -68,37 +69,54 @@ namespace Readdit.Controllers
             return View(book);
         }
 
-        // POST: Admin/Delete/5
+        // POST: Admin/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (_context.Books == null)
+            {
+                return Problem("Entity set 'ReadditContext.Books' is null");
+
+            }
             var book = await _context.Books.FindAsync(id);
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
+            if (book != null)
+            {
+                _context.Books.Remove(book);
+                await _context.SaveChangesAsync();
+
+                TempData["Message"] = $"{book.book_name} was removed successfully";
+            }
+            else
+            {
+                TempData["Message"] = $"{book.book_name} has already been removed";
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/Edit/5
+        // GET: Admin/Update
         public async Task<IActionResult> Update(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            // Retrieve the list of users and books from database
+            var users = _context.Users.ToList();
+            var books = _context.Books.ToList();
 
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
+            // Create a view model to pass both lists to the view
+            var viewModel = new UpdateViewModel
             {
-                return NotFound();
-            }
-            return View(book);
+                Users = users,
+                Books = books
+            };
+
+            // Pass the view model to the view
+            return View(viewModel);
         }
 
-        // POST: Admin/Edit/5
+        // POST: Admin/Update
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookId,BookName,AuthorName,Pages,Genre")] Book book)
+        public async Task<IActionResult> Update(int id, [Bind("book_id,book_name,author_name,book_genre")] Book book)
         {
             if (id != book.book_id)
             {
@@ -109,7 +127,16 @@ namespace Readdit.Controllers
             {
                 try
                 {
-                    _context.Update(book);
+                    // Retrieve the existing book from the database
+                    var existingBook = await _context.Books.FindAsync(id);
+
+                    // Update the properties of the existing book with values from the updated book
+                    existingBook.book_name = book.book_name;
+                    existingBook.author_name = book.author_name;
+                    existingBook.book_genre = book.book_genre;
+
+                    // Update the book in the database
+                    _context.Update(existingBook);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -123,28 +150,24 @@ namespace Readdit.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details));
             }
             return View(book);
         }
 
-        // GET: Admin/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+        // GET: Admin/Details
+        public async Task<IActionResult> Details()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            // Retrieve user details with associated books
+            var usersWithBooks = await _context.Users
+                .Include(u => u.UserBooks)
+                .ThenInclude(ub => ub.Book)
+                .ToListAsync();
 
-            var book = await _context.Books
-                .FirstOrDefaultAsync(m => m.book_id == id);
-            if (book == null)
-            {
-                return NotFound();
-            }
-
-            return View(book);
+            return View(usersWithBooks);
         }
+
 
         private bool BookExists(int id)
         {

@@ -21,17 +21,17 @@ else
                 <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
                 <input type="hidden" asp-for="book_id" />
                 <div class="form-group">
-                    <label asp-for="book_name" class="control-label">Book Name:</label>
+                    <label asp-for="book_name" class="control-label" name="book_name">Book Name:</label>
                     <input asp-for="book_name" class="form-control">
                     <span asp-validation-for="book_name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="author_name" class="control-label">Author Name:</label>
+                    <label asp-for="author_name" class="control-label" name="author_name">Author Name:</label>
                     <input asp-for="author_name" class="form-control" />
                     <span asp-validation-for="author_name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="book_genre" class="control-label">Book Genre:</label>
+                    <label asp-for="book_genre" class="control-label" name="book_genre">Book Genre:</label>
                     <input asp-for="book_genre" class="form-control" />
                     <span asp-validation-for="book_genre" class="text-danger"></span>
                 </div>

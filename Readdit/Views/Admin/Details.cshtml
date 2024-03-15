@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<Readdit.Areas.Identity.Data.ApplicationUser>
+
+@{
     ViewData["Title"] = "Details";
 }
 
@@ -11,11 +13,13 @@
             border-collapse: collapse;
             width: 100%;
         }
+
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
         }
@@ -35,15 +39,16 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Placeholder for user details -->
-            <!-- Replace this with actual user details from the database -->
-            <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>john@example.com</td>
-                <td>2024-03-15</td>
-            </tr>
-            <!-- Add more users as needed -->
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                    <td>@user.UserCreatedDate.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+
         </tbody>
     </table>
 
@@ -59,16 +64,15 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Placeholder for book details -->
-            <!-- Replace this with actual book details from the database -->
-            <tr>
-                <td>Book 1</td>
-                <td>Author 1</td>
-                <td>200</td>
-                <td>Fiction</td>
-                <td>2024-03-15</td>
-            </tr>
-            <!-- Add more books as needed -->
+            @foreach (var book in ViewBag.Books)
+            {
+                <tr>
+                    <td>@book.book_name</td>
+                    <td>@book.author_name</td>
+                    <td>@book.book_genre</td>
+                    <td>@book.date_added.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
         </tbody>
     </table>
 </body>
