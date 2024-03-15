@@ -57,8 +57,34 @@ public class MembersController : Controller
         return View(book);
     }
 
-    // GET: Members/Edit/5
-    public async Task<IActionResult> Edit(int? id)
+    [HttpPost]
+    public async Task<IActionResult> AddToToBeReadList(int book_id)
+    {
+        try
+        {
+            // Find the book by its ID
+            var book = await _context.Books.FindAsync(book_id);
+
+            if (book == null)
+            {
+                // If the book with the given ID is not found, return a 404 Not Found response
+                return NotFound();
+            }
+
+            // Add the book to the user's "To Be Read" list
+
+            // Redirect to the ToBeRead page after adding the book to the list
+            return RedirectToAction("ToBeRead", "Members");
+        }
+        catch (Exception ex)
+        {
+            // Handle any exceptions and return a 500 Internal Server Error response
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
+    }
+
+// GET: Members/Edit/5
+public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
         {
