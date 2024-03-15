@@ -1,53 +1,68 @@
-﻿@{
+﻿@model Readdit.Models.MembersViewModel
+
+@{
     ViewData["Title"] = "Details";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Handlee">
-</head>
-<body>
-    <h1>@ViewData["Title"]</h1>
+<h1>Details</h1>
 
-    <h2>To Be Read</h2>
-    <div class="book-list">
-        <!-- Placeholder for To Be Read list -->
-        <!-- Replace this with actual book data from the database -->
-        <div class="book">
-            <p>Book Title 1</p>
-            <!-- Placeholder for book image -->
-            <!-- Replace this with actual book image -->
-            <img src="book-image-1.jpg" alt="Book Image 1">
-            <!-- Placeholder for action buttons -->
-            <!-- Replace these with actual action buttons -->
-            <button>Move to Currently Reading</button>
-            <button>Add Review</button>
-            <button>Delete Book</button>
-        </div>
-        <div class="book">
-            <p>Book Title 2</p>
-            <img src="book-image-2.jpg" alt="Book Image 2">
-            <button>Move to Currently Reading</button>
-            <button>Add Review</button>
-            <button>Delete Book</button>
-        </div>
-        <!-- Add more books as needed -->
-    </div>
+<h2>Currently Reading</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Genre</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model.CurrentlyReadingBooks)
+        {
+            <tr>
+                <td>@book.book_name</td>
+                <td>@book.author_name</td>
+                <td>@book.book_genre</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-    <h2>Currently Reading</h2>
-    <div class="book-list">
-        <!-- Placeholder for Currently Reading list -->
-        <!-- Replace this with actual book data from the database -->
-        <!-- Similar structure as above -->
-    </div>
+<h2>To Be Read</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Genre</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model.CurrentlyReadingBooks)
+        {
+            <tr>
+                <td>@book.book_name</td>
+                <td>@book.author_name</td>
+                <td>@book.book_genre</td>
+            </tr>
+        }
+    </tbody>
 
     <h2>Completed Reading</h2>
-    <div class="book-list">
-        <!-- Placeholder for Completed Reading list -->
-        <!-- Replace this with actual book data from the database -->
-        <!-- Similar structure as above -->
-    </div>
-</body>
-</html>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Book Name</th>
+                <th>Author</th>
+                <th>Genre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model.CurrentlyReadingBooks)
+            {
+                <tr>
+                    <td>@book.book_name</td>
+                    <td>@book.author_name</td>
+                    <td>@book.book_genre</td>
+                </tr>
+            }
+        </tbody>

@@ -1,6 +1,9 @@
-﻿@{
+﻿@model Readdit.Models.UpdateViewModel
+
+@{
     ViewData["Title"] = "Update";
 }
+
 
 <!DOCTYPE html>
 <html>
@@ -28,6 +31,7 @@
     </style>
 </head>
 <body>
+    <form asp-action="Update" method="post">
     <h1>Update</h1>
 
     <h2>Users</h2>
@@ -41,18 +45,24 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Placeholder for user details -->
-            <!-- Replace this with actual user details from the database -->
-            <tr>
-                <td class="editable">John</td>
-                <td class="editable">Doe</td>
-                <td class="editable">john@example.com</td>
-                <td>2024-03-15</td>
-            </tr>
-            <!-- Add more users as needed -->
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td class="editable">@Html.EditorFor(model => user.FirstName)</td>
+                    <td class="editable">@Html.EditorFor(model => user.LastName)</td>
+                    <td class="editable">@Html.EditorFor(model => user.Email)</td>
+                    <td>@user.UserCreatedDate.ToString("yyyy-MM-dd")</td>
+                    
+                    <td><button type="submit" class="save-btn">Save</button></td>e344
+
+                    
+                </tr>
+            }
         </tbody>
     </table>
+    </form>
 
+    <form asp-action="Update" method="post">
     <h2>Books</h2>
     <table>
         <thead>
@@ -65,28 +75,89 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Placeholder for book details -->
-            <!-- Replace this with actual book details from the database -->
-            <tr>
-                <td class="editable">Book 1</td>
-                <td class="editable">Author 1</td>
-                <td class="editable">200</td>
-                <td class="editable">Fiction</td>
-                <td>2024-03-15</td>
-            </tr>
-            <!-- Add more books as needed -->
+            @foreach (var book in Model.Books)
+            {
+                <tr>
+                    <td class="editable">@Html.EditorFor(model => book.book_name)</td>
+                    <td class="editable">@Html.EditorFor(model => book.author_name)</td>
+                    <td class="editable">@Html.EditorFor(model => book.book_genre)</td>
+                    <td>@book.date_added.ToString("yyyy-MM-dd")</td>
+                     <td><button type="submit" class="save-btn">Save</button></td>
+                </tr>
+            }
         </tbody>
     </table>
+</form>
 
     <script>
-        // Add click event listener to editable cells
         document.querySelectorAll('.editable').forEach(function (cell) {
             cell.addEventListener('click', function () {
                 // Replace the cell's content with an input field for editing
                 var value = this.textContent.trim();
-                this.innerHTML = '<input type="text" value="' + value + '">';
+                var input = document.createElement('input');
+                input.type = 'text';
+                input.value = value;
+                input.classList.add('edit-input');
+
+                // Replace the cell's content with the input field
+                this.innerHTML = '';
+                this.appendChild(input);
+
+                // Focus on the input field
+                input.focus();
             });
         });
+
+        // Add keypress event listener to input fields for editing
+        document.addEventListener('keypress', function (event) {
+            // Check if the pressed key is Enter (key code 13)
+            if (event.keyCode === 13) {
+                // Get the active input field
+                var activeInput = document.querySelector('.edit-input');
+                if (activeInput) {
+                    // Get the value from the input field
+                    var value = activeInput.value.trim();
+
+                    // Replace the input field with the new value
+                    activeInput.parentElement.textContent = value;
+                }
+            }
+        });
+
+        // Add click event listener to save buttons
+        document.querySelectorAll('.save-btn').forEach(function (button) {
+            button.addEventListener('click', function () {
+                // Get the form associated with the button
+                var form = this.closest('form');
+                // Submit the form
+                form.submit();
+            });
+        });
+
+            fetch('/Admin/Update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedValues)
+            })
+                .then(response => {
+                    if (response.ok) {
+                        // Handle success
+                        alert('Changes saved successfully.');
+                        // Optionally, redirect to another page
+                        window.location.href = '/Admin/Details'; // Redirect to details page
+                    } else {
+                        // Handle failure
+                        alert('Failed to save changes.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing the request.');
+                });
+        });
     </script>
+
 </body>
 </html>

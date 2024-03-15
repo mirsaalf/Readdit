@@ -1,52 +1,83 @@
-﻿@{
+﻿@model Book
+
+@{
     ViewData["Title"] = "Create";
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>@ViewData["Title"]</title>
-</head>
-<body>
-    <h1>Create</h1>
+@if (ViewData["Message"] != null)
+{
+    <div class="alert alert-success">
+        <h4>@ViewData["Message"]</h4>
+    </div>
+}
 
-    <form id="createBookForm">
-        <div>
-            <label for="bookName">Book Name:</label>
-            <input type="text" id="bookName" name="bookName">
+else
+{
+    <h1>Create Client</h1>
+    <br />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create" id="createBookForm">
+                <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
+                <input type="hidden" asp-for="book_id" />
+                <div class="form-group">
+                    <label asp-for="book_name" class="control-label" name="book_name">Book Name:</label>
+                    <input asp-for="book_name" class="form-control">
+                    <span asp-validation-for="book_name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="author_name" class="control-label" name="author_name">Author Name:</label>
+                    <input asp-for="author_name" class="form-control" />
+                    <span asp-validation-for="author_name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="book_genre" class="control-label" name="book_genre">Book Genre:</label>
+                    <input asp-for="book_genre" class="form-control" />
+                    <span asp-validation-for="book_genre" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+
+            </form>
         </div>
-        <div>
-            <label for="authorName">Author Name:</label>
-            <input type="text" id="authorName" name="authorName">
-        </div>
-        <div>
-            <label for="pages">Number of Pages:</label>
-            <input type="number" id="pages" name="pages">
-        </div>
-        <div>
-            <label for="genre">Genre:</label>
-            <input type="text" id="genre" name="genre">
-        </div>
-        <button type="submit">Submit</button>
-    </form>
+    </div>
+}
+<div>
+    <a class="btn btn-primary" asp-action="Index">Return</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
     <script>
         document.getElementById("createBookForm").addEventListener("submit", function (event) {
             event.preventDefault(); // Prevent the default form submission
 
             // Get form data
-            var bookName = document.getElementById("bookName").value;
-            var authorName = document.getElementById("authorName").value;
-            var pages = document.getElementById("pages").value;
-            var genre = document.getElementById("genre").value;
+            var formData = new FormData(this);
 
             // Perform AJAX request to add the book to the database
-            // Replace this with actual AJAX call to add the book
-            // After successful addition, display a popup message
-            // For example:
-            alert("Book '" + bookName + "' added to the directory.");
+            fetch("/Admin/Create", {
+                method: "POST",
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Book added to the directory.");
+                        // Optionally, redirect to another page
+                        window.location.href = "/Admin/Index";
+                    } else {
+                        alert("Failed to add book to the directory.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("An error occurred while processing the request.");
+                });
         });
-    </script>
-</body>
-</html>
 
+    </script>
+}

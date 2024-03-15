@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Readdit.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection.Emit;
 
 namespace Readdit.Areas.Identity.Data
 {
@@ -14,14 +15,30 @@ namespace Readdit.Areas.Identity.Data
         {
         }
         public DbSet<Book> Books { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
+        public DbSet<UserBook> UserBooks { get; set; }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+            base.OnModelCreating(modelBuilder);
+
+            // Define primary key for IdentityUserLogin
+            modelBuilder.Entity<IdentityUserLogin<string>>()
+                .HasKey(l => new { l.LoginProvider, l.ProviderKey });
+
+            // Your existing configurations
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.UserBooks)
+                .WithOne(ub => ub.User)
+                .HasForeignKey(ub => ub.UserId);
+
+            modelBuilder.Entity<UserBook>()
+                .HasKey(ub => new { ub.UserId, ub.BookId });
+
+            modelBuilder.Entity<Book>()
+                .HasMany(b => b.UserBooks)
+                .WithOne(ub => ub.Book)
+                .HasForeignKey(ub => ub.BookId);
         }
+
     }
 
 }
