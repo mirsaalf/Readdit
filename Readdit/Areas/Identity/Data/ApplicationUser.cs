@@ -14,7 +14,7 @@ namespace Readdit.Areas.Identity.Data
         [Column(TypeName = "nvarchar(100)")]
         public string? LastName { get; set; }
 
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public DateTime UserCreatedDate { get; set; }
 
         // Navigation property for user-book relationship
