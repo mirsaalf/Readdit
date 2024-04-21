@@ -22,9 +22,17 @@ namespace Readdit.Controllers
         // GET: Members
         public async Task<IActionResult> Index()
         {
-            var books = await _context.UserBooks.ToListAsync();
-            return View(books);
+            // Retrieve the list of UserBooks from the database
+            var userBooks = await _context.UserBooks
+                                          .Include(ub => ub.Book) // Include the associated Book
+                                          .ToListAsync();
+
+            // Extract the list of books from the userBooks
+            var books = userBooks.Select(ub => ub.Book).ToList();
+
+            return View(books); // Pass the list of books to the view
         }
+
 
         // GET: Members/Details
         public async Task<IActionResult> Details()
@@ -86,16 +94,21 @@ namespace Readdit.Controllers
         // GET: Members/ToBeRead
         public async Task<IActionResult> ToBeRead()
         {
-            // Retrieve the books marked as "To Be Read" for the current user
             var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id; // Implement the method to get the current user's ID
+            var userId = user.Id;
             var toBeReadBooks = await _context.UserBooks
                 .Where(ub => ub.UserId == userId && ub.Status == BookStatus.ToBeRead)
                 .Select(ub => ub.Book)
                 .ToListAsync();
 
-            return View(toBeReadBooks);
+            var viewModel = new MembersViewModel
+            {
+                ToBeReadBooks = toBeReadBooks
+            };
+
+            return View(viewModel);
         }
+
 
         public async Task<IActionResult> CurrentlyReading()
         {
@@ -156,8 +169,16 @@ namespace Readdit.Controllers
                 .Select(ub => ub.Book)
                 .ToListAsync();
 
-            return View(completedReadingBooks);
+            // Create a MembersViewModel instance and set the CompletedReadingBooks property
+            var viewModel = new MembersViewModel
+            {
+                CompletedReadingBooks = completedReadingBooks
+            };
+
+            // Pass the viewModel to the CompletedReading.cshtml view
+            return View(viewModel);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
