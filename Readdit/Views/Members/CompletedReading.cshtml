@@ -1,12 +1,12 @@
 ﻿@model Readdit.Models.MembersViewModel
 
 @{
-    ViewData["Title"] = "Currently Reading";
+    ViewData["Title"] = "Completed Reading";
 }
 
 <h1>To Be Read</h1>
 
-@if (Model.CurrentlyReadingBooks.Any())
+@if (Model.CompletedReadingBooks.Any())
 {
     <form id="removeBookForm" method="post" asp-action="RemoveFromList" asp-controller="Members" class="mb-3">
     <table class="table">
@@ -19,45 +19,28 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var book in Model.CurrentlyReadingBooks)
+            @foreach (var book in Model.CompletedReadingBooks)
             {
                 <tr>
                     <td>@book.book_name</td>
                     <td>@book.author_name</td>
                     <td>@book.book_genre</td>
                     <td>
-                        <button class="btn btn-primary" onclick="moveToCurrentlyReading(@book.book_id)">Move to Completed Reading</button>
                         <button class="btn btn-danger" onclick="removeFromList(@book.book_id)">Remove from List</button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-</form>
+    </form>
 }
 else
 {
-    <p>No books found in the Currently Reading list.</p>
+    <p>No books found in the Completed list.</p>
 }
 
 @section Scripts {
     <script>
-        function moveToCurrentlyReading(bookId) {
-            // Send an AJAX request to the server to update the status of the book to CurrentlyReading
-            $.ajax({
-                url: '/Members/MoveToCompletedReading',
-                type: 'POST',
-                data: { id: bookId },
-                success: function (response) {
-                    // Handle success, maybe show a message or update UI
-                    console.log('Book moved to Completed Reading');
-                },
-                error: function (xhr, status, error) {
-                    // Handle error
-                    console.error('Error moving book to Completed Reading:', error);
-                }
-            });
-        }
 
         function removeFromList(bookId) {
             // Send an AJAX request to the server to remove the book from the list
