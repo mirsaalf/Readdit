@@ -20,6 +20,8 @@ namespace Readdit.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
+            ViewBag.Books = _context.Books.ToList();
+
         }
 
         // GET: Admin
@@ -165,8 +167,23 @@ namespace Readdit.Controllers
                 .ThenInclude(ub => ub.Book)
                 .ToListAsync();
 
-            return View(usersWithBooks);
+            // Create a list of UserDetailsViewModel objects
+            var userDetailsViewModels = new List<UserDetailsViewModel>();
+
+            // Populate the view models
+            foreach (var user in usersWithBooks)
+            {
+                var viewModel = new UserDetailsViewModel
+                {
+                    User = user,
+                    UserBooks = user.UserBooks.ToList()
+                };
+                userDetailsViewModels.Add(viewModel);
+            }
+
+            return View(userDetailsViewModels);
         }
+
 
 
         private bool BookExists(int id)
