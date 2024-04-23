@@ -12,8 +12,8 @@ using Readdit.Areas.Identity.Data;
 namespace Readdit.Migrations
 {
     [DbContext(typeof(ReadditContext))]
-    [Migration("20240421041657_Initial")]
-    partial class Initial
+    [Migration("20240423034809_AddSarahJMaasBooks")]
+    partial class AddSarahJMaasBooks
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,7 +171,6 @@ namespace Readdit.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
