@@ -22,16 +22,12 @@ namespace Readdit.Controllers
         // GET: Members
         public async Task<IActionResult> Index()
         {
-            // Retrieve the list of UserBooks from the database
-            var userBooks = await _context.UserBooks
-                                          .Include(ub => ub.Book) // Include the associated Book
-                                          .ToListAsync();
+            // Retrieve the list of books from the database
+            var books = await _context.Books.ToListAsync();
 
-            // Extract the list of books from the userBooks
-            var books = userBooks.Select(ub => ub.Book).ToList();
-
-            return View(books); // Pass the list of books to the view
+            return View(books);
         }
+
 
 
         // GET: Members/Details
@@ -109,8 +105,42 @@ namespace Readdit.Controllers
             return View(viewModel);
         }
 
+        // POST: Members/AddToToBeReadList
+        [HttpPost]
+        public async Task<IActionResult> AddToToBeReadList([FromBody] int book_id)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-        public async Task<IActionResult> CurrentlyReading()
+            var userBook = await _context.UserBooks
+                .Where(ub => ub.UserId == user.Id && ub.BookId == book_id)
+                .FirstOrDefaultAsync();
+
+            if (userBook == null)
+            {
+                userBook = new UserBook
+                {
+                    UserId = user.Id,
+                    BookId = book_id,
+                    Status = BookStatus.ToBeRead
+                };
+                _context.UserBooks.Add(userBook);
+            }
+            else
+            {
+                userBook.Status = BookStatus.ToBeRead;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
+    public async Task<IActionResult> CurrentlyReading()
         {
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
