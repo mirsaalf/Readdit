@@ -8,7 +8,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>@ViewData["Title"]</title>
     <style>
         table {
             border-collapse: collapse;
@@ -31,63 +30,61 @@
     </style>
 </head>
 <body>
-    <form asp-action="Update" method="post">
     <h1>Update</h1>
 
-    <h2>Users</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email Address</th>
-                <th>Date Created</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model.Users)
-            {
+    <form asp-action="UpdateUsers" method="post">
+        <h2>Users</h2>
+        <table>
+            <thead>
                 <tr>
-                    <td class="editable">@Html.EditorFor(model => user.FirstName)</td>
-                    <td class="editable">@Html.EditorFor(model => user.LastName)</td>
-                    <td class="editable">@Html.EditorFor(model => user.Email)</td>
-                    <td>@user.UserCreatedDate.ToString("yyyy-MM-dd")</td>
-                    
-                    <td><button type="submit" class="save-btn">Save</button></td>e344
-
-                    
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email Address</th>
+                    <th>Date Created</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var user in Model.Users)
+                {
+                    <tr>
+                        <td>@Html.EditorFor(model => user.FirstName)</td>
+                        <td>@Html.EditorFor(model => user.LastName)</td>
+                        <td>@Html.EditorFor(model => user.Email)</td>
+                        <td>@user.UserCreatedDate.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="submit" class="save-btn">Save Users</button>
     </form>
 
-    <form asp-action="Update" method="post">
-    <h2>Books</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Book Name</th>
-                <th>Author</th>
-                <th>Pages</th>
-                <th>Genre</th>
-                <th>Date Added</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in Model.Books)
-            {
+    <form asp-controller="Admin" asp-action="UpdateBooks" method="post">
+        <h2>Books</h2>
+        <table>
+            <thead>
                 <tr>
-                    <td class="editable">@Html.EditorFor(model => book.book_name)</td>
-                    <td class="editable">@Html.EditorFor(model => book.author_name)</td>
-                    <td class="editable">@Html.EditorFor(model => book.book_genre)</td>
-                    <td>@book.date_added.ToString("yyyy-MM-dd")</td>
-                     <td><button type="submit" class="save-btn">Save</button></td>
+                    <th>Book Name</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Date Added</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</form>
+            </thead>
+            <tbody>
+                @foreach (var book in Model.Books)
+                {
+                    <tr>
+                        <td>@Html.EditorFor(model => book.book_name)</td>
+                        <td>@Html.EditorFor(model => book.author_name)</td>
+                        <td>@Html.EditorFor(model => book.book_genre)</td>
+                        <td>@book.date_added.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <button type="submit" class="save-btn">Save Books</button>
+    </form>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
     <script>
         document.querySelectorAll('.editable').forEach(function (cell) {
@@ -108,22 +105,6 @@
             });
         });
 
-        // Add keypress event listener to input fields for editing
-        document.addEventListener('keypress', function (event) {
-            // Check if the pressed key is Enter (key code 13)
-            if (event.keyCode === 13) {
-                // Get the active input field
-                var activeInput = document.querySelector('.edit-input');
-                if (activeInput) {
-                    // Get the value from the input field
-                    var value = activeInput.value.trim();
-
-                    // Replace the input field with the new value
-                    activeInput.parentElement.textContent = value;
-                }
-            }
-        });
-
         // Add click event listener to save buttons
         document.querySelectorAll('.save-btn').forEach(function (button) {
             button.addEventListener('click', function () {
@@ -134,30 +115,35 @@
             });
         });
 
-            fetch('/Admin/Update', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedValues)
-            })
-                .then(response => {
-                    if (response.ok) {
-                        // Handle success
-                        alert('Changes saved successfully.');
-                        // Optionally, redirect to another page
-                        window.location.href = '/Admin/Details'; // Redirect to details page
-                    } else {
-                        // Handle failure
-                        alert('Failed to save changes.');
-                    }
+        // Handle form submission
+        document.querySelectorAll('form').forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent default form submission
+                var formData = new FormData(form); // Create FormData object from form data
+                // Send AJAX request to update data
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while processing the request.');
-                });
+                    .then(response => {
+                        if (response.ok) {
+                            // Handle success
+                            alert('Changes saved successfully.');
+                            // Optionally, redirect to another page
+                            window.location.reload(); // Refresh the page
+                        } else {
+                            // Handle failure
+                            alert('Failed to save changes.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while processing the request.');
+                    });
+            });
         });
     </script>
 
 </body>
-</html>
+</html> 
+
