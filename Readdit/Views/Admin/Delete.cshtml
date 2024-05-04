@@ -25,9 +25,10 @@
                     <td>@book.author_name</td>
                     <td>@book.book_genre</td>
                     <td>
-                        <button type="submit" class="btn btn-danger" name="bookId" value="@book.book_id">
+                        <button type="button" class="btn btn-danger" onclick="confirmDelete(@book.book_id)">
                             Delete
                         </button>
+
                     </td>
                 </tr>
             }
