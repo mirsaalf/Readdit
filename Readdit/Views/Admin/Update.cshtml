@@ -89,14 +89,11 @@
     <script>
         document.querySelectorAll('.editable').forEach(function (cell) {
             cell.addEventListener('click', function () {
-                // Replace the cell's content with an input field for editing
                 var value = this.textContent.trim();
                 var input = document.createElement('input');
                 input.type = 'text';
                 input.value = value;
                 input.classList.add('edit-input');
-
-                // Replace the cell's content with the input field
                 this.innerHTML = '';
                 this.appendChild(input);
 
@@ -118,9 +115,9 @@
         // Handle form submission
         document.querySelectorAll('form').forEach(function (form) {
             form.addEventListener('submit', function (event) {
-                event.preventDefault(); // Prevent default form submission
-                var formData = new FormData(form); // Create FormData object from form data
-                // Send AJAX request to update data
+                event.preventDefault(); 
+                var formData = new FormData(form); 
+
                 fetch(form.action, {
                     method: 'POST',
                     body: formData
@@ -129,7 +126,6 @@
                         if (response.ok) {
                             // Handle success
                             alert('Changes saved successfully.');
-                            // Optionally, redirect to another page
                             window.location.reload(); // Refresh the page
                         } else {
                             // Handle failure

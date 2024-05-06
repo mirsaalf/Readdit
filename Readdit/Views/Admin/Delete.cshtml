@@ -40,7 +40,6 @@
 <script>
     function confirmDelete(bookId) {
         if (confirm("Are you sure you want to delete this book?")) {
-            // Perform AJAX request to delete the book
             fetch("/Admin/Delete", {
                 method: "POST",
                 headers: {
@@ -52,7 +51,6 @@
             .then(response => {
                 if (response.ok) {
                     alert("Book deleted successfully.");
-                    // Optionally, refresh the page to reflect changes
                     window.location.reload();
                 } else {
                     alert("Failed to delete book.");
