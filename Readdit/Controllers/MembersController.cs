@@ -67,25 +67,6 @@ namespace Readdit.Controllers
         }
 
 
-        // GET: Members/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Members/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Author,Pages,Genre")] Book book)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(book);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(book);
-        }
 
         // GET: Members/ToBeRead
         public async Task<IActionResult> ToBeRead()
