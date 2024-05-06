@@ -15,6 +15,10 @@
         #bookTable.collapsed table {
             display: none;
         }
+
+        body {
+            text-align: center;
+        }
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Handlee">
     <script>
@@ -28,7 +32,7 @@
 
             // Loop through all table rows, and hide those who don't match the search query
             for (i = 0; i < tr.length; i++) {
-                td = tr[i].getElementsByTagName("td")[0]; // Assuming the book name is in the first column
+                td = tr[i].getElementsByTagName("td")[0]; 
                 if (td) {
                     txtValue = td.textContent || td.innerText;
                     if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -72,7 +76,7 @@
                 }
         </tbody>
     </table>
-    </>
+    </div>
 
     <h3>My Lists</h3>
     <div class="container text-center">
@@ -97,7 +101,6 @@
             <div class="col">
                 <p>Set a goal to read more this year!</p>
                 <p>I want to read <input type="number" id="goal" min="1" value="1"> books in 2024</p>
-                <!-- Add functionality to the Start Goal button -->
                 <button type="button" class="btn-light" onclick="startGoal()">Start Goal</button>
             </div>
         </div>
@@ -107,7 +110,6 @@
         function startGoal() {
             var goal = document.getElementById("goal").value;
             // Add functionality to track goal progress based on completed books
-            // For example, you can send an AJAX request to the server to update the goal progress
             alert("Goal set to " + goal + " books.");
         }
 
@@ -122,7 +124,6 @@
             });
 
             function addToToBeReadList(book_id) {
-                // Send AJAX request to add the book to the To Be Read list
                 fetch('/Members/AddToToBeReadList', {
                     method: 'POST',
                     headers: {
