@@ -8,8 +8,8 @@ namespace Readdit.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public string UserId { get; set; }  
-        public User User { get; set; }
+        public string UserId { get; set; }
+        public ApplicationUser User { get; set; } // Updated reference
         public int BookId { get; set; }
         public Book Book { get; set; }
         public BookStatus Status { get; set; }
