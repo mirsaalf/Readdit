@@ -8,7 +8,6 @@
 
 @if (Model.ToBeReadBooks.Any())
 {
-    <form id="removeBookForm" method="post" asp-action="RemoveFromList" asp-controller="Members" class="mb-3">
     <table class="table">
         <thead>
             <tr>
@@ -26,14 +25,17 @@
                     <td>@book.author_name</td>
                     <td>@book.book_genre</td>
                     <td>
+                        <form method="post" asp-action="RemoveFromList" asp-controller="Members" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="bookId" value="@book.book_id" />
+                            <button type="submit" class="btn btn-danger">Remove from List</button>
+                        </form>
                         <button class="btn btn-primary" onclick="moveToCurrentlyReading(@book.book_id)">Move to Currently Reading</button>
-                        <button class="btn btn-danger" onclick="removeFromList(@book.book_id)">Remove from List</button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    </form>
 }
 else
 {
@@ -43,13 +45,19 @@ else
 @section Scripts {
     <script>
         function moveToCurrentlyReading(bookId) {
+            // Send an AJAX request to the server to update the status of the book to CurrentlyReading
+            var token = $('input[name="__RequestVerificationToken"]').val();
             $.ajax({
                 url: '/Members/MoveToCurrentlyReading',
                 type: 'POST',
-                data: { id: bookId },
+                data: {
+                    id: bookId,
+                    __RequestVerificationToken: token
+                },
                 success: function (response) {
-                    // Handle success
+                    // Handle success, maybe show a message or update UI
                     console.log('Book moved to Currently Reading');
+                    location.reload(); // Reload the page to reflect the changes
                 },
                 error: function (xhr, status, error) {
                     // Handle error
@@ -59,13 +67,19 @@ else
         }
 
         function removeFromList(bookId) {
+            // Send an AJAX request to the server to remove the book from the list
+            var token = $('input[name="__RequestVerificationToken"]').val();
             $.ajax({
                 url: '/Members/RemoveFromList',
                 type: 'POST',
-                data: { id: bookId },
+                data: {
+                    bookId: bookId,
+                    __RequestVerificationToken: token
+                },
                 success: function (response) {
-                    // Handle success
+                    // Handle success, maybe show a message or update UI
                     console.log('Book removed from the list');
+                    location.reload(); // Reload the page to reflect the changes
                 },
                 error: function (xhr, status, error) {
                     // Handle error
@@ -74,5 +88,4 @@ else
             });
         }
     </script>
-
 }
