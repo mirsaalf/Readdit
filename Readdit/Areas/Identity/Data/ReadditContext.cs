@@ -24,20 +24,22 @@ namespace Readdit.Areas.Identity.Data
             modelBuilder.Entity<IdentityUserLogin<string>>()
                 .HasKey(l => new { l.LoginProvider, l.ProviderKey });
 
-            // Your existing configurations
-            modelBuilder.Entity<User>()
+            // Define composite key for UserBook
+            modelBuilder.Entity<UserBook>()
+                .HasKey(ub => new { ub.UserId, ub.BookId });
+
+            // Configure relationships
+            modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.UserBooks)
                 .WithOne(ub => ub.User)
                 .HasForeignKey(ub => ub.UserId);
-
-            modelBuilder.Entity<UserBook>()
-                .HasKey(ub => new { ub.UserId, ub.BookId });
 
             modelBuilder.Entity<Book>()
                 .HasMany(b => b.UserBooks)
                 .WithOne(ub => ub.Book)
                 .HasForeignKey(ub => ub.BookId);
         }
+
 
     }
 
