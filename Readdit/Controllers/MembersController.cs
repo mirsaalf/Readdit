@@ -68,10 +68,16 @@ namespace Readdit.Controllers
 
 
 
+
         // GET: Members/ToBeRead
         public async Task<IActionResult> ToBeRead()
         {
             var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
             var userId = user.Id;
             var toBeReadBooks = await _context.UserBooks
                 .Where(ub => ub.UserId == userId && ub.Status == BookStatus.ToBeRead)
@@ -86,9 +92,10 @@ namespace Readdit.Controllers
             return View(viewModel);
         }
 
+
         // POST: Members/AddToToBeReadList
         [HttpPost]
-        public async Task<IActionResult> AddToToBeReadList([FromBody] int book_id)
+        public async Task<IActionResult> AddToToBeReadList([FromBody] Book book)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
@@ -97,7 +104,7 @@ namespace Readdit.Controllers
             }
 
             var userBook = await _context.UserBooks
-                .Where(ub => ub.UserId == user.Id && ub.BookId == book_id)
+                .Where(ub => ub.UserId == user.Id && ub.BookId == book.book_id)
                 .FirstOrDefaultAsync();
 
             if (userBook == null)
@@ -105,7 +112,7 @@ namespace Readdit.Controllers
                 userBook = new UserBook
                 {
                     UserId = user.Id,
-                    BookId = book_id,
+                    BookId = book.book_id,
                     Status = BookStatus.ToBeRead
                 };
                 _context.UserBooks.Add(userBook);
@@ -121,16 +128,23 @@ namespace Readdit.Controllers
         }
 
 
-    public async Task<IActionResult> CurrentlyReading()
+
+
+        // GET: Members/CurrentlyReading
+        public async Task<IActionResult> CurrentlyReading()
         {
             var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id;
+            if (user == null)
+            {
+                return NotFound();
+            }
 
+            var userId = user.Id;
             var currentlyReadingBooks = await _context.UserBooks
-            .Include(ub => ub.Book)
-            .Where(ub => ub.UserId == userId && ub.Status == BookStatus.CurrentlyReading)
-            .Select(ub => ub.Book) // Select the Book object directly
-            .ToListAsync();
+                .Include(ub => ub.Book)
+                .Where(ub => ub.UserId == userId && ub.Status == BookStatus.CurrentlyReading)
+                .Select(ub => ub.Book)
+                .ToListAsync();
 
             var viewModel = new MembersViewModel
             {
@@ -140,80 +154,105 @@ namespace Readdit.Controllers
             return View(viewModel);
         }
 
-
-        // Action method to move a book to the Completed Reading list
+        // POST: Members/MoveToCurrentlyReading
         [HttpPost]
-        public async Task<IActionResult> MoveToCompletedReading(int id)
+        public async Task<IActionResult> MoveToCurrentlyReading(int id)
         {
-            // Get the current user's ID
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
 
-            // Find the user's book record with the given book ID
             var userBook = await _context.UserBooks
                 .FirstOrDefaultAsync(ub => ub.BookId == id && ub.UserId == userId);
 
             if (userBook != null)
             {
-                // Update the status of the book to CompletedReading
-                userBook.Status = BookStatus.Completed;
-
+                userBook.Status = BookStatus.CurrentlyReading;
                 _context.UserBooks.Update(userBook);
                 await _context.SaveChangesAsync();
-
-                return Ok(); // Return a success response
+                return Ok();
             }
 
-            return NotFound(); // Book not found for the user
+            return NotFound();
         }
 
-        public async Task<IActionResult> CompletedReading()
+
+        // Action method to move a book to the Completed Reading list
+        // POST: Members/MoveToCompletedReading
+        [HttpPost]
+        public async Task<IActionResult> MoveToCompletedReading(int id)
         {
-            // Get the current user's ID
             var user = await _userManager.GetUserAsync(User);
             var userId = user.Id;
 
-            // Retrieve the books that the user has marked as completed reading
+            var userBook = await _context.UserBooks
+                .FirstOrDefaultAsync(ub => ub.BookId == id && ub.UserId == userId);
+
+            if (userBook != null)
+            {
+                userBook.Status = BookStatus.Completed;
+                _context.UserBooks.Update(userBook);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+
+        // GET: Members/CompletedReading
+        public async Task<IActionResult> CompletedReading()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userId = user.Id;
             var completedReadingBooks = await _context.UserBooks
                 .Include(ub => ub.Book)
                 .Where(ub => ub.UserId == userId && ub.Status == BookStatus.Completed)
                 .Select(ub => ub.Book)
                 .ToListAsync();
 
-            // Create a MembersViewModel instance and set the CompletedReadingBooks property
             var viewModel = new MembersViewModel
             {
                 CompletedReadingBooks = completedReadingBooks
             };
 
-            // Pass the viewModel to the CompletedReading.cshtml view
             return View(viewModel);
         }
 
 
+
+        // POST: Members/RemoveFromList
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveFromList(int bookId)
         {
-            // Get the current user's ID
             var user = await _userManager.GetUserAsync(User);
-            var userId = user.Id;
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-            // Find the UserBook entry corresponding to the book and user
+            var userId = user.Id;
             var userBook = await _context.UserBooks
                 .Where(ub => ub.UserId == userId && ub.BookId == bookId)
                 .FirstOrDefaultAsync();
 
-            // If the UserBook entry exists, remove it from the database
             if (userBook != null)
             {
                 _context.UserBooks.Remove(userBook);
                 await _context.SaveChangesAsync();
             }
 
-            // Redirect back to the same page or another appropriate page
-            return RedirectToAction(nameof(CompletedReading));
+            return RedirectToAction(nameof(Index));
         }
+
+
+
+
         private bool BookExists(int id)
         {
             return _context.Books.Any(e => e.book_id == id);
