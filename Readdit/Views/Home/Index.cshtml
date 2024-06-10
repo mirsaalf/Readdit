@@ -10,8 +10,12 @@
 
 <html>
 <head>
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Handlee">
+    <style>
+        body {
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Handlee">
 </head>
 <body>
     <div class="welcome-image">
@@ -23,12 +27,12 @@
         <h2> track and manage your reading progress</h2>
     </div>
 
+    <br />
     <div id="sign-in-up">
         <form action="/Identity/Account/Login">
             <button type="submit" class="btn btn-outline-dark">Sign In</button>
         </form>
-    </div>
-    <div>
+        <br />
         <form action="/Identity/Account/Register">
             <button type="submit" class="btn btn-outline-dark">Sign Up</button>
         </form>
