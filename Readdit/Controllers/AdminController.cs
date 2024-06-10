@@ -39,18 +39,25 @@ namespace Readdit.Controllers
         // POST: Admin/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("book_id,book_name,book_genre")] Book book)
+        public async Task<IActionResult> Create([Bind("book_name,author_name,book_genre")] Book book)
         {
             if (ModelState.IsValid)
             {
+                book.date_added = DateTime.Now;  // Ensure date_added is set
                 _context.Add(book);
                 await _context.SaveChangesAsync();
 
-                ViewData["Message"] = "Welcome to the Create page!";
+                ViewData["Message"] = "Book successfully added!";
                 return View();
             }
+
             return View(book);
         }
+
+
+
+
+
 
         // GET: Admin/Delete
         public async Task<IActionResult> Delete()
@@ -75,7 +82,7 @@ namespace Readdit.Controllers
 
             TempData["Message"] = $"{book.book_name} was removed successfully";
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Delete));
         }
 
 
@@ -108,7 +115,11 @@ namespace Readdit.Controllers
                 {
                     foreach (var user in users)
                     {
-                        _context.Update(user);
+                        var existingUser = await _context.Users.FindAsync(user.Id);
+                        if (existingUser != null)
+                        {
+                            _context.Entry(existingUser).CurrentValues.SetValues(user);
+                        }
                     }
                     await _context.SaveChangesAsync();
                     TempData["Message"] = "Users updated successfully";
@@ -119,47 +130,42 @@ namespace Readdit.Controllers
                     ModelState.AddModelError("", $"Error updating users: {ex.Message}");
                 }
             }
-            // If ModelState is not valid or if an exception occurred, return to the Update view
             var viewModel = new UpdateViewModel
             {
                 Users = users,
-                Books = _context.Books.ToList() // You might need to fetch books again based on your requirements
+                Books = _context.Books.ToList()
             };
             return View("Update", viewModel);
         }
 
-        // POST: Admin/Update
+
+        // POST: Admin/UpdateBooks
+        [HttpPost]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateBooks(int id, [Bind("book_id,book_name,author_name,book_genre")] Book book)
+        public async Task<IActionResult> UpdateBooks(List<Book> books)
         {
-            if (id != book.book_id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(book);
+                    foreach (var book in books)
+                    {
+                        var existingBook = await _context.Books.FindAsync(book.book_id);
+                        if (existingBook != null)
+                        {
+                            _context.Entry(existingBook).CurrentValues.SetValues(book);
+                        }
+                    }
                     await _context.SaveChangesAsync();
                     TempData["Message"] = "Books updated successfully";
                     return RedirectToAction(nameof(Update));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BookExists(book.book_id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError("", "Concurrency error occurred while updating books.");
                 }
             }
-            // If ModelState is not valid, return to the Update view with the same book object
             var viewModel = new UpdateViewModel
             {
                 Users = _context.Users.ToList(),
@@ -167,6 +173,7 @@ namespace Readdit.Controllers
             };
             return View("Update", viewModel);
         }
+
 
         // Method to check if a book exists
         private bool BookExists(int id)
