@@ -6,35 +6,43 @@
 
 <h1>Delete</h1>
 
-<form asp-action="Delete" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Book Name</th>
-                <th>Author</th>
-                <th>Genre</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var book in Model)
-            {
-                <tr>
-                    <td>@book.book_name</td>
-                    <td>@book.author_name</td>
-                    <td>@book.book_genre</td>
-                    <td>
-                        <button type="button" class="btn btn-danger" onclick="confirmDelete(@book.book_id)">
-                            Delete
-                        </button>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
 
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book Name</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.book_name</td>
+                <td>@book.author_name</td>
+                <td>@book.book_genre</td>
+                <td>
+                    <form asp-action="DeleteConfirmed" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@book.book_id" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="form-group">
+    <a class="btn btn-primary" asp-action="Index">Return</a>
+</div>
 
 
 <script>

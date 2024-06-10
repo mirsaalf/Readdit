@@ -32,7 +32,7 @@
 <body>
     <h1>Update</h1>
 
-    <form asp-action="UpdateUsers" method="post">
+    <form asp-controller="Admin" asp-action="UpdateUsers" method="post">
         <h2>Users</h2>
         <table>
             <thead>
@@ -44,19 +44,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var user in Model.Users)
+                @for (int i = 0; i < Model.Users.Count; i++)
                 {
                     <tr>
-                        <td>@Html.EditorFor(model => user.FirstName)</td>
-                        <td>@Html.EditorFor(model => user.LastName)</td>
-                        <td>@Html.EditorFor(model => user.Email)</td>
-                        <td>@user.UserCreatedDate.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <input type="hidden" asp-for="@Model.Users[i].Id" />
+                            @Html.EditorFor(model => Model.Users[i].FirstName)
+                        </td>
+                        <td>@Html.EditorFor(model => Model.Users[i].LastName)</td>
+                        <td>@Html.EditorFor(model => Model.Users[i].Email)</td>
+                        <td>@Model.Users[i].UserCreatedDate.ToString("yyyy-MM-dd")</td>
                     </tr>
                 }
             </tbody>
         </table>
+        <br />
         <button type="submit" class="save-btn">Save Users</button>
     </form>
+
 
     <form asp-controller="Admin" asp-action="UpdateBooks" method="post">
         <h2>Books</h2>
@@ -70,19 +75,29 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var book in Model.Books)
+                @for (int i = 0; i < Model.Books.Count; i++)
                 {
                     <tr>
-                        <td>@Html.EditorFor(model => book.book_name)</td>
-                        <td>@Html.EditorFor(model => book.author_name)</td>
-                        <td>@Html.EditorFor(model => book.book_genre)</td>
-                        <td>@book.date_added.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <input type="hidden" asp-for="@Model.Books[i].book_id" />
+                            @Html.EditorFor(model => Model.Books[i].book_name)
+                        </td>
+                        <td>@Html.EditorFor(model => Model.Books[i].author_name)</td>
+                        <td>@Html.EditorFor(model => Model.Books[i].book_genre)</td>
+                        <td>@Model.Books[i].date_added.ToString("yyyy-MM-dd")</td>
                     </tr>
                 }
             </tbody>
         </table>
+        <br />
         <button type="submit" class="save-btn">Save Books</button>
     </form>
+
+    <br />
+    <div class="form-group">
+        <a class="btn btn-primary" asp-action="Index">Return</a>
+    </div>
+
 
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 

@@ -5,6 +5,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style>
+        a:link {
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: gray;
+        }
+
+        ul : li {
+            font-size: 20px;
+        }
+    </style>
     <title>@ViewData["Title"]</title>
 </head>
 <body>
@@ -14,9 +27,21 @@
 
     <ul>
         <li><a href="/Admin/Create">Create</a></li>
+        <p>
+            Add a new book to the directory
+        </p>
         <li><a href="/Admin/Delete">Delete</a></li>
+        <p>
+            Remove a book from the directory
+        </p>
         <li><a href="/Admin/Details">Details</a></li>
+        <p>
+            View user and book details
+        </p>
         <li><a href="/Admin/Update">Update</a></li>
+        <p>
+            Update user and book information
+        </p>
     </ul>
 </body>
 </html>

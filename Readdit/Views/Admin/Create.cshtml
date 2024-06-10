@@ -1,7 +1,16 @@
-﻿@model Book
+﻿@model Readdit.Models.Book
 
-@{
-    ViewData["Title"] = "Create";
+@if (ViewBag.Errors != null)
+{
+    <div class="alert alert-danger">
+        <h4>Validation Errors:</h4>
+        <ul>
+            @foreach (var error in ViewBag.Errors)
+            {
+                <li>@error</li>
+            }
+        </ul>
+    </div>
 }
 
 @if (ViewData["Message"] != null)
@@ -10,72 +19,81 @@
         <h4>@ViewData["Message"]</h4>
     </div>
 }
-
 else
 {
-    <h1>Create Client</h1>
+    <h1>Add a Book to the Directory</h1>
     <br />
     <div class="row">
         <div class="col-md-4">
-            <form asp-action="Create" id="createBookForm">
-                <div asp-validation-summary="ModelOnly" class="text-danger"> </div>
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input type="hidden" asp-for="book_id" />
                 <div class="form-group">
-                    <label asp-for="book_name" class="control-label" name="book_name">Book Name:</label>
-                    <input asp-for="book_name" class="form-control">
+                    <label asp-for="book_name" class="control-label">Book Name:</label>
+                    <input asp-for="book_name" class="form-control" />
                     <span asp-validation-for="book_name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="author_name" class="control-label" name="author_name">Author Name:</label>
+                    <label asp-for="author_name" class="control-label">Author Name:</label>
                     <input asp-for="author_name" class="form-control" />
                     <span asp-validation-for="author_name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="book_genre" class="control-label" name="book_genre">Book Genre:</label>
+                    <label asp-for="book_genre" class="control-label">Book Genre:</label>
                     <input asp-for="book_genre" class="form-control" />
                     <span asp-validation-for="book_genre" class="text-danger"></span>
                 </div>
+                <br />
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-primary" />
+                    <a class="btn btn-primary" asp-action="Index">Return</a>
                 </div>
-
             </form>
         </div>
     </div>
 }
-<div>
-    <a class="btn btn-primary" asp-action="Index">Return</a>
-</div>
+
+
+
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+}
+
 
     <script>
-        document.getElementById("createBookForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Prevent the default form submission
+    document.getElementById("createBookForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
 
-            // Get form data
-            var formData = new FormData(this);
+        // Get form data
+        var formData = new FormData(this);
 
-            fetch("/Admin/Create", {
-                method: "POST",
-                body: formData
+        fetch("/Admin/Create", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Accept": "application/json",
+                "X-Requested-With": "XMLHttpRequest"
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    window.location.href = "/Admin/Index";
+                } else {
+                    var errorMessages = data.errors.join("\n");
+                    alert("Failed to add book to the directory:\n" + errorMessages);
+                }
             })
-                .then(response => {
-                    if (response.ok) {
-                        alert("Book added to the directory.");
-                        window.location.href = "/Admin/Index";
-                    } else {
-                        alert("Failed to add book to the directory.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("An error occurred while processing the request.");
-                });
-        });
+            .catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while processing the request.");
+            });
+    });
+
 
     </script>
-}
+
