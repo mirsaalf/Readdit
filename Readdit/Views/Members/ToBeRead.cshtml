@@ -36,10 +36,41 @@
             }
         </tbody>
     </table>
+
+    <h3>My Lists</h3>
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <p>Currently Reading</p>
+                <a href="/Members/CurrentlyReading">Go to Currently Reading list</a>
+            </div>
+            <div class="col">
+                <p>Completed Reading</p>
+                <a href="/Members/CompletedReading">Go to Completed Reading list</a>
+            </div>
+        </div>
+    </div>
 }
 else
 {
     <p>No books found in the To Be Read list.</p>
+
+    <h3>My Lists</h3>
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <p>Currently Reading</p>
+                <a href="/Members/CurrentlyReading">Go to Currently Reading list</a>
+            </div>
+            <div class="col">
+                <p>Completed Reading</p>
+                <a href="/Members/CompletedReading">Go to Completed Reading list</a>
+            </div>
+            <div class="col">
+                <a style="text-decoration:none" href="/Members/Index">Return Home</a>
+            </div>
+        </div>
+    </div>
 }
 
 @section Scripts {

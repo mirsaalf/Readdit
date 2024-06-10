@@ -4,7 +4,7 @@
     ViewData["Title"] = "Currently Reading";
 }
 
-<h1>To Be Read</h1>
+<h1>Currently Reading</h1>
 
 @if (Model.CurrentlyReadingBooks.Any())
 {
@@ -34,10 +34,41 @@
         </tbody>
     </table>
 </form>
+
+    <h3>My Lists</h3>
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <p>To Be Read</p>
+                <a href="/Members/ToBeRead">Go to To Be Read list</a>
+            </div>
+            <div class="col">
+                <p>Completed Reading</p>
+                <a href="/Members/CompletedReading">Go to Completed Reading list</a>
+            </div>
+        </div>
+    </div>
 }
 else
 {
     <p>No books found in the Currently Reading list.</p>
+
+    <h3>My Lists</h3>
+    <div class="container text-center">
+        <div class="row align-items-start">
+            <div class="col">
+                <p>To Be Read</p>
+                <a href="/Members/ToBeRead">Go to To Be Read list</a>
+            </div>
+            <div class="col">
+                <p>Completed Reading</p>
+                <a href="/Members/CompletedReading">Go to Completed Reading list</a>
+            </div>
+            <div class="col">
+                <a style="text-decoration:none" href="/Members/Index">Return Home</a>
+            </div>
+        </div>
+    </div>
 }
 
 @section Scripts {
